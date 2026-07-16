@@ -8,7 +8,7 @@ pygame.mixer.init()
 
 # ===== LOAD BACKGROUND MUSIC =====
 try:
-    pygame.mixer.music.load("breakout_music.mp3")
+    pygame.mixer.music.load("breakout_music.ogg")
     pygame.mixer.music.set_volume(0.5)  # 0.0 to 1.0 (50% volume)
     pygame.mixer.music.play(-1)  # -1 means loop forever
     print("Background music loaded!")
