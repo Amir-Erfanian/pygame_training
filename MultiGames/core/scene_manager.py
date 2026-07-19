@@ -3,7 +3,9 @@ from core.transition import FadeTransition
 
 class SceneManager:
 
-    def __init__(self):
+    def __init__(self, engine):
+
+        self.engine = engine
 
         self.scene = None
 
@@ -32,17 +34,14 @@ class SceneManager:
             change = self.transition.update(dt)
 
             if change:
-
                 self.scene = self.next_scene
 
             if self.transition.finished:
-
                 self.transition = None
 
             return
 
         if self.scene:
-
             self.scene.update(dt)
 
     def draw(self, screen):

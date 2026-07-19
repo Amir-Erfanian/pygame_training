@@ -1,6 +1,7 @@
 import pygame
 
 import settings
+from core.asset_manager import AssetManager
 
 
 class Engine:
@@ -18,6 +19,8 @@ class Engine:
         self.running = True
 
         self.fps = 0
+
+        self.assets = AssetManager()
 
     def quit(self):
         self.running = False

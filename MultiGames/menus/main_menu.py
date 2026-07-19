@@ -11,19 +11,18 @@ class MainMenu(Scene):
 
     def __init__(self, manager):
         super().__init__(manager)
-
-        self.title_font = pygame.font.SysFont(
-            settings.FONT_NAME,
+        self.title_font = self.engine.assets.font(
+            "Poppins-Bold.ttf",
             60
         )
 
-        self.subtitle_font = pygame.font.SysFont(
-            settings.FONT_NAME,
+        self.subtitle_font = self.engine.assets.font(
+            "Poppins-Regular.ttf",
             24
         )
 
-        self.button_font = pygame.font.SysFont(
-            settings.FONT_NAME,
+        self.button_font = self.engine.assets.font(
+            "Poppins-Regular.ttf",
             32
         )
 

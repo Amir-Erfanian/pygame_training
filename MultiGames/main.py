@@ -10,13 +10,15 @@ from menus.main_menu import MainMenu
 
 engine = Engine()
 
-manager = SceneManager()
+manager = SceneManager(engine)
 
 manager.scene = MainMenu(manager)
+
 
 while engine.running:
 
     dt = engine.clock.tick(settings.FPS) / 1000
+
     engine.fps = engine.clock.get_fps()
 
     events = pygame.event.get()
