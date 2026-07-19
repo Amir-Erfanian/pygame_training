@@ -17,5 +17,7 @@ class Engine:
 
         self.running = True
 
+        self.fps = 0
+
     def quit(self):
         self.running = False

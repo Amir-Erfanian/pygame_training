@@ -1,5 +1,7 @@
 import pygame
 
+import settings
+
 from core.engine import Engine
 from core.scene_manager import SceneManager
 
@@ -17,7 +19,8 @@ manager.change_scene(
 
 while engine.running:
 
-    dt = engine.clock.tick(60) / 1000
+    dt = engine.clock.tick(settings.FPS) / 1000
+    engine.fps = engine.clock.get_fps()
 
     events = pygame.event.get()
 
