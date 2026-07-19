@@ -12,10 +12,7 @@ engine = Engine()
 
 manager = SceneManager()
 
-manager.change_scene(
-    MainMenu(manager)
-)
-
+manager.scene = MainMenu(manager)
 
 while engine.running:
 

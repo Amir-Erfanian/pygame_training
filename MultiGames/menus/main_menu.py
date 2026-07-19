@@ -3,7 +3,8 @@ import pygame
 import settings
 
 from core.scene import Scene
-from core.button import Button
+from core.ui.button import Button
+from core.ui.layout import Layout
 
 
 class MainMenu(Scene):
@@ -26,7 +27,7 @@ class MainMenu(Scene):
             32
         )
 
-        self.buttons = []
+        self.layout = Layout()
 
         button_width = 260
         button_height = 60
@@ -45,20 +46,24 @@ class MainMenu(Scene):
             x = settings.WIDTH // 2 - button_width // 2
             y = start_y + i * spacing
 
-            self.buttons.append(
-                Button(
-                    text,
-                    x,
-                    y,
-                    button_width,
-                    button_height,
-                    self.button_font,
-                    callback
-                )
+            button = Button(
+                text,
+                x,
+                y,
+                button_width,
+                button_height,
+                self.button_font,
+                callback
             )
 
+            self.layout.add(button)
+
     def play(self):
-        print("Play clicked")
+        from menus.library import Library
+
+        self.manager.change_scene(
+            Library(self.manager)
+        )
 
     def settings(self):
         print("Settings clicked")
@@ -71,18 +76,17 @@ class MainMenu(Scene):
 
         for event in events:
 
-            if event.type == pygame.KEYDOWN:
+            if (
+                event.type == pygame.KEYDOWN
+                and event.key == pygame.K_ESCAPE
+            ):
+                self.exit_game()
 
-                if event.key == pygame.K_ESCAPE:
-                    self.exit_game()
-
-            for button in self.buttons:
-                button.handle_event(event)
+        self.layout.handle_events(events)
 
     def update(self, dt):
 
-        for button in self.buttons:
-            button.update(dt)
+        self.layout.update(dt)
 
     def draw_gradient(self, screen):
 
@@ -134,5 +138,4 @@ class MainMenu(Scene):
 
         screen.blit(subtitle, subtitle_rect)
 
-        for button in self.buttons:
-            button.draw(screen)
+        self.layout.draw(screen)

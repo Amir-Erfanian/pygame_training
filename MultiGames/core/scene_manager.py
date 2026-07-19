@@ -1,16 +1,54 @@
+from core.transition import FadeTransition
+
+
 class SceneManager:
 
     def __init__(self):
+
         self.scene = None
 
-    def change_scene(self, scene):
-        self.scene = scene
+        self.next_scene = None
+
+        self.transition = None
+
+    def change_scene(self, new_scene):
+
+        self.next_scene = new_scene
+
+        self.transition = FadeTransition()
 
     def handle_events(self, events):
-        self.scene.handle_events(events)
+
+        if self.transition:
+            return
+
+        if self.scene:
+            self.scene.handle_events(events)
 
     def update(self, dt):
-        self.scene.update(dt)
+
+        if self.transition:
+
+            change = self.transition.update(dt)
+
+            if change:
+
+                self.scene = self.next_scene
+
+            if self.transition.finished:
+
+                self.transition = None
+
+            return
+
+        if self.scene:
+
+            self.scene.update(dt)
 
     def draw(self, screen):
-        self.scene.draw(screen)
+
+        if self.scene:
+            self.scene.draw(screen)
+
+        if self.transition:
+            self.transition.draw(screen)

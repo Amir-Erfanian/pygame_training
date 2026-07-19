@@ -1,7 +1,10 @@
 import pygame
 
+from .widget import Widget
 
-class Button:
+
+class Button(Widget):
+
     def __init__(
         self,
         text,
@@ -15,12 +18,11 @@ class Button:
         hover_color=(95, 130, 180),
         text_color=(255, 255, 255)
     ):
+
+        super().__init__(x, y, width, height)
+
         self.text = text
-
-        self.rect = pygame.Rect(x, y, width, height)
-
         self.font = font
-
         self.callback = callback
 
         self.bg_color = bg_color
@@ -28,7 +30,9 @@ class Button:
         self.text_color = text_color
 
         self.hovered = False
+        self.pressed = False
 
+        # Animation
         self.scale = 1.0
         self.target_scale = 1.0
 
@@ -38,18 +42,37 @@ class Button:
 
     def handle_event(self, event):
 
+        if not self.enabled:
+            return
+
         if event.type == pygame.MOUSEMOTION:
             self.hovered = self.rect.collidepoint(event.pos)
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
 
-            if event.button == 1 and self.hovered:
-                self.callback()
+            if (
+                event.button == 1
+                and self.hovered
+            ):
+                self.pressed = True
+
+        elif event.type == pygame.MOUSEBUTTONUP:
+
+            if event.button == 1:
+
+                if self.hovered and self.pressed:
+                    self.callback()
+
+                self.pressed = False
 
     def update(self, dt):
 
-        if self.hovered:
+        if self.pressed:
+            self.target_scale = 0.97
+
+        elif self.hovered:
             self.target_scale = 1.05
+
         else:
             self.target_scale = 1.0
 
@@ -59,7 +82,11 @@ class Button:
             self.target_scale - self.scale
         ) * speed * dt
 
-        target = self.hover_color if self.hovered else self.bg_color
+        target = (
+            self.hover_color
+            if self.hovered
+            else self.bg_color
+        )
 
         for i in range(3):
             self.current_color[i] += (
@@ -68,10 +95,19 @@ class Button:
 
     def draw(self, screen):
 
-        width = int(self.rect.width * self.scale)
-        height = int(self.rect.height * self.scale)
+        if not self.visible:
+            return
 
-        rect = pygame.Rect(0, 0, width, height)
+        width = int(self.width * self.scale)
+        height = int(self.height * self.scale)
+
+        rect = pygame.Rect(
+            0,
+            0,
+            width,
+            height
+        )
+
         rect.center = self.rect.center
 
         shadow = rect.copy()
@@ -86,17 +122,22 @@ class Button:
 
         pygame.draw.rect(
             screen,
-            self.current_color,
+            tuple(map(int, self.current_color)),
             rect,
             border_radius=12
         )
 
-        text = self.font.render(
+        text_surface = self.font.render(
             self.text,
             True,
             self.text_color
         )
 
-        text_rect = text.get_rect(center=rect.center)
+        text_rect = text_surface.get_rect(
+            center=rect.center
+        )
 
-        screen.blit(text, text_rect)
+        screen.blit(
+            text_surface,
+            text_rect
+        )
