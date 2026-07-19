@@ -56,8 +56,8 @@ class MainMenu(Scene):
             )
 
             self.layout.add(button)
-
     def play(self):
+
         from menus.library import Library
 
         self.manager.change_scene(
